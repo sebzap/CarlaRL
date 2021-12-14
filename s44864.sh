@@ -1,16 +1,5 @@
-# seeds 44864 26912 94869 88994 24946 34416 73735 65066
-
 python -m carla.train_agent --norm_obs --seed 44864 --exp_name nc --hid_context_net 0
 python -m carla.train_agent --norm_obs --seed 44864 --exp_name carlac_frozenvae_geco_seed171041946 --contextual --context_encoder_model_path models/VAE/InvRes/minigrid_GecoVAE_tolerance5.0_255_lambda_init0.1_step500_seed171041946_2021-11-28_22-57-16_35.08783.save --conditioning carlac
 python -m carla.train_agent --norm_obs --seed 44864 --exp_name carlac_frozenvae_annealed_seed171041946 --contextual --context_encoder_model_path models/VAE/InvRes/minigrid_AnnealedVAE_gamma100.0_capacity30.0_iterations10000_seed787727006_2021-11-30_04-31-21_955.9334.save --conditioning carlac
 python -m carla.train_agent --norm_obs --seed 44864 --exp_name carlac_frozenvae_beta1_seed171041946 --contextual --context_encoder_model_path models/VAE/InvRes/minigrid_BetaVAE_beta1.0_seed787727006_2021-11-29_19-30-37_951.3407.save --conditioning carlac
 python -m carla.train_agent --norm_obs --seed 44864 --exp_name carlac_frozenvae_beta10_seed171041946 --contextual --context_encoder_model_path models/VAE/InvRes/minigrid_BetaVAE_beta10.0_seed787727006_2021-11-29_22-31-13_1199.1041.save --conditioning carlac
-
-
-tensorboard --logdir=./carla/agents/data
-
-python -m carla.train_agent --norm_obs --seed 44864 --exp_name test --contextual --context_encoder_model_path models/VAE/InvRes/minigrid_GecoVAE_tolerance5.0_255_lambda_init0.1_step500_seed171041946_2021-11-28_22-57-16_35.08783.save --conditioning carlac
-
-unzip ../carla_disentanglement/checkpoints_minigrid.zip -d ./models/VAE/InvRes/
- mv models/VAE/InvRes/checkpoints/* models/VAE/InvRes/
- 
