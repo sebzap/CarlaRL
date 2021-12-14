@@ -1,6 +1,5 @@
 
 
-
 import os
 import pickle
 import scipy.signal
@@ -56,7 +55,7 @@ class StateContextNet(nn.Module):
         self.vae_train = vae_train
         self.state_encoder_freeze = state_encoder_freeze
         self.vae_params = vae_params
-        self.joint_training=joint_training
+        self.joint_training = joint_training
 
         self.gt = False
 
@@ -124,14 +123,15 @@ class StateContextNet(nn.Module):
     def set_vae_weights(self):
 
         if self.contextual and self.vae_model_path != '':
-            model_path = os.path.join(self.vae_model_path, 'model.pt')
-            args_path = os.path.join(self.vae_model_path, 'args.pkl')
+            # model_path = os.path.join(self.vae_model_path, 'model.pt')
+            # args_path = os.path.join(self.vae_model_path, 'args.pkl')
 
-            with open(args_path, 'rb') as handle:
-                args_dict = pickle.load(handle)
+            # with open(args_path, 'rb') as handle:
+            #     args_dict = pickle.load(handle)
 
-            self.context_encoder = get_model(**args_dict)
-            self.context_encoder.load_state_dict(torch.load(model_path))
+            # fixed model size
+            self.context_encoder = get_model(latent_dim=100, img_size=48)
+            self.context_encoder.load_state_dict(torch.load(self.vae_model_path))
         elif self.contextual and self.joint_training:
             args_dict = self.vae_params
             self.context_encoder = get_model(**args_dict)

@@ -9,6 +9,7 @@ import torch.nn as nn
 import numpy as np
 
 from carla.agents.utils.weight_init import weights_init_he, weights_init_xavier, weights_init_kaiming_normal
+from carla.architectures.sebastian.InvRes import InvertedResidualVAEModel
 from carla.architectures.vae import BasicBetaVAE
 
 
@@ -60,23 +61,40 @@ def get_clf_model(init, latent_dim, type, n_context=90):
     return model
 
 
-def get_model(kernel_sizes, output_padding_lst, latent_dim, hidden_dims, img_size, loss_type, vae_gamma, vae_beta,
-              nonlin, enc_bn, dec_bn, dec_out_nonlin, prior, soft_clip, init, strides, paddings, batch_size,
-              vae_c_max=25, vae_c_stop_iter=100, vae_geco_goal=0.5, vae_reduction='mean', **kwargs):
-    model = BasicBetaVAE(in_channels=3, kernel_sizes=kernel_sizes, latent_dim=latent_dim, hidden_dims=hidden_dims,
-                         loss_type=loss_type, img_size=img_size, nonlin=nonlin, enc_bn=enc_bn, dec_bn=dec_bn,
-                         output_padding_lst=output_padding_lst, gamma=vae_gamma, beta=vae_beta,
-                         dec_out_nonlin=dec_out_nonlin, prior=prior, soft_clip=soft_clip, strides=strides,
-                         paddings=paddings, batch_size=batch_size, max_capacity=vae_c_max,
-                         vae_c_stop_iter=vae_c_stop_iter, geco_goal=vae_geco_goal, reduction=vae_reduction)
+# def get_model(kernel_sizes, output_padding_lst, latent_dim, hidden_dims, img_size, loss_type, vae_gamma, vae_beta,
+#               nonlin, enc_bn, dec_bn, dec_out_nonlin, prior, soft_clip, init, strides, paddings, batch_size,
+#               vae_c_max=25, vae_c_stop_iter=100, vae_geco_goal=0.5, vae_reduction='mean', **kwargs):
+#     model = BasicBetaVAE(in_channels=3, kernel_sizes=kernel_sizes, latent_dim=latent_dim, hidden_dims=hidden_dims,
+#                          loss_type=loss_type, img_size=img_size, nonlin=nonlin, enc_bn=enc_bn, dec_bn=dec_bn,
+#                          output_padding_lst=output_padding_lst, gamma=vae_gamma, beta=vae_beta,
+#                          dec_out_nonlin=dec_out_nonlin, prior=prior, soft_clip=soft_clip, strides=strides,
+#                          paddings=paddings, batch_size=batch_size, max_capacity=vae_c_max,
+#                          vae_c_stop_iter=vae_c_stop_iter, geco_goal=vae_geco_goal, reduction=vae_reduction)
 
-    if init == 'he':
-        model.init_weights(weights_init_he)
-        model.apply(weights_init_he)
-    elif init == 'xavier':
-        model.init_weights(weights_init_xavier)
-        model.apply(weights_init_xavier)
-    elif init == 'kaiming':
-        model.init_weights(weights_init_kaiming_normal)
-        model.apply(weights_init_kaiming_normal)
+#     if init == 'he':
+#         model.init_weights(weights_init_he)
+#         model.apply(weights_init_he)
+#     elif init == 'xavier':
+#         model.init_weights(weights_init_xavier)
+#         model.apply(weights_init_xavier)
+#     elif init == 'kaiming':
+#         model.init_weights(weights_init_kaiming_normal)
+#         model.apply(weights_init_kaiming_normal)
+#     return model
+
+
+def get_model(latent_dim, img_size, **kwargs):
+
+    model = InvertedResidualVAEModel(num_latents=latent_dim, num_channels=3, image_size=img_size)
+
+    # init not important if we use pretrained
+    # if init == 'he':
+    #     model.init_weights(weights_init_he)
+    #     model.apply(weights_init_he)
+    # elif init == 'xavier':
+    #     model.init_weights(weights_init_xavier)
+    #     model.apply(weights_init_xavier)
+    # elif init == 'kaiming':
+    #     model.init_weights(weights_init_kaiming_normal)
+    #     model.apply(weights_init_kaiming_normal)
     return model

@@ -118,7 +118,6 @@ class EnvRenderer:
                 pos_x, pos_y = self.transfer_positions(np.asarray([pos_x, pos_y]))
                 self.grid.set(pos_x, pos_y, WorldObj('obstacle', IDX_TO_COLOR[int(color_idx)]))
 
-
         # Render the whole grid
         img = self.grid.render(
             self.tile_size,

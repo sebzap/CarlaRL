@@ -1,0 +1,2 @@
+python -m carla.train_agent --norm_obs --seed 44864 --exp_name carlac_frozenvae_geco_firsttest \
+--contextual --context_encoder_model_path models/VAE/InvRes/minigrid_GecoVAE_tolerance5.0_255_lambda_init0.1_step500_seed171041946_2021-11-28_22-57-16_35.08783.save --conditioning carlac
