@@ -14,9 +14,22 @@ python -m carla.train_agent --norm_obs --seed 44864 --exp_name test --contextual
 unzip ../carla_disentanglement/checkpoints_minigrid.zip -d ./models/VAE/InvRes/
  mv models/VAE/InvRes/checkpoints/* models/VAE/InvRes/
 
+conda activate carla
 ./s44864.sh &> s44864.log &
+./s26912.sh &> s26912.log &
+
+./s44864_2.sh &> s44864_2.log &
 
 python -m carla.train_agent --norm_obs --seed 44864 --exp_name nc --hid_context_net 0 &> nc.log &
 
 for old in *.save;do new=$(echo $old | sed -E 's/(.*)_2021.{15}_[0-9]+\.[0-9]+\.save$/\1.save/');echo $new;done
 # for old in *.save;do new=$(echo $old | sed -E 's/(.*)_2021.{15}_[0-9]+\.[0-9]+\.save$/\1.save/');mv $old $new;done
+
+carlac_frozenvae_annealed_seed171041946
+carlac_frozenvae_AnnealedVAE_gamma100.0_capacity30.0_iterations10000_seed787727006
+carlac_frozenvae_beta1_seed171041946
+carlac_frozenvae_beta10_seed171041946
+carlac_frozenvae_BetaVAE_beta1.0_seed787727006
+carlac_frozenvae_BetaVAE_beta10.0_seed787727006
+carlac_frozenvae_geco_seed171041946
+carlac_frozenvae_GecoVAE_tolerance5.0_255_lambda_init0.1_step500_seed171041946
