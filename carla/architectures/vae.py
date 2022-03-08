@@ -13,6 +13,8 @@ Tensor = TypeVar('torch.tensor')
 
 # base class adopted from:
 # https://github.com/AntixK/PyTorch-VAE/
+
+
 class BasicBetaVAE(nn.Module):
     num_iter = 0  # Global static variable to keep track of iterations
 
@@ -97,6 +99,7 @@ class BasicBetaVAE(nn.Module):
         dummy_out = self.encoder(dummy_in)
         print(dummy_out.shape)
         self.conv_feat_shape = dummy_out.shape
+        print("linear input shape", np.prod(self.conv_feat_shape))
         self.fc_mu = nn.Linear(np.prod(self.conv_feat_shape), latent_dim)
         self.fc_var = nn.Linear(np.prod(self.conv_feat_shape), latent_dim)
 
@@ -403,6 +406,8 @@ class BasicBetaVAE(nn.Module):
 
 # base class adopted from:
 # https://github.com/applied-ai-lab/genesis/blob/master/train.py
+
+
 class GECO():
 
     def __init__(self, goal, step_size, alpha=0.99, beta_init=1.0,

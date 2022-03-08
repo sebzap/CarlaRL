@@ -6,6 +6,10 @@ python -m carla.train_agent --norm_obs --seed 44864 --exp_name carlac_frozenvae_
 python -m carla.train_agent --norm_obs --seed 44864 --exp_name carlac_frozenvae_beta1_seed171041946 --contextual --context_encoder_model_path models/VAE/InvRes/minigrid_BetaVAE_beta1.0_seed787727006_2021-11-29_19-30-37_951.3407.save --conditioning carlac
 python -m carla.train_agent --norm_obs --seed 44864 --exp_name carlac_frozenvae_beta10_seed171041946 --contextual --context_encoder_model_path models/VAE/InvRes/minigrid_BetaVAE_beta10.0_seed787727006_2021-11-29_22-31-13_1199.1041.save --conditioning carlac
 
+python -m carla.train_agent --norm_obs --seed 24946 --exp_name nc --hid_context_net 0 &> nc-24946.log &
+python -m carla.train_agent --norm_obs --seed 34416 --exp_name nc --hid_context_net 0 &> nc-34416.log &
+python -m carla.train_agent --norm_obs --seed 73735 --exp_name nc --hid_context_net 0 &> nc-73735.log &
+python -m carla.train_agent --norm_obs --seed 65066 --exp_name nc --hid_context_net 0 &> nc-65066.log &
 
 tensorboard --logdir=./carla/agents/data
 
@@ -17,6 +21,8 @@ unzip ../carla_disentanglement/checkpoints_minigrid.zip -d ./models/VAE/InvRes/
 conda activate carla
 ./s44864.sh &> s44864.log &
 ./s26912.sh &> s26912.log &
+./s94869.sh &> s94869.log &
+./88994.sh &> 88994.log &
 
 ./s44864_2.sh &> s44864_2.log &
 
@@ -33,3 +39,70 @@ carlac_frozenvae_BetaVAE_beta1.0_seed787727006
 carlac_frozenvae_BetaVAE_beta10.0_seed787727006
 carlac_frozenvae_geco_seed171041946
 carlac_frozenvae_GecoVAE_tolerance5.0_255_lambda_init0.1_step500_seed171041946
+
+zip 26912-44864.zip -r carla/agents/data/*
+scp sebastianz@student1.cp.jku.at:~/CarlaRL/26912-44864.zip .
+
+
+
+zip 94869.zip -r carla/agents/data/*
+
+scp sebastianz@student1.cp.jku.at:~/CarlaRL/26912-88994.zip .
+scp sebastianz@student2.cp.jku.at:~/CarlaRL/94869.zip .
+
+
+Disentanglement lib:
+- why is their annealed bad? -> probably because they used ReLU
+
+
+- what to present?
+ - how much detail in VAE basics? MSE = how much information we, KL = compression
+
+ - how much Carla ?
+
+ - research questions?
+  - can you improve carla? (with better disentanglement)
+  - improve results by more stoa architecture?
+  - how to choose model
+
+
+
+
+Things to evaluate
+- DCI + modularity_explicitness
+- some more models, like higher beta
+- conditioning in CarlaRL (maybe try best model)
+- use postirior (sampled representations) in scores + rl? (disentenglement lib findings 5.1)
+-> hamid: mean is fine (ref paper?)
+
+Implications
+-> Geco is best, (Annealed is easier to tune)
+-> how to evaluate without metrics???(since it requirs GT) (RL correlation data shows nothing)
+-> more complex NN architecture improves things
+ -> don't use ReLU (with initial high KL reg) -> use leaky (do i need data here?) (can mention)
+
+-> with same RL structure, better results -> richer context information leads to better results
+
+28.2 - 14.3 flo urlaub
+
+
+Presentation
+ -> disentanglement metrics
+   -> formular
+   -> explain simpler, prep slides for rest
+
+-> GOD 0.7 plot
+
+-> comparison image plot (appendix)
+
+-> maybe reduce metrics in pres
+
+
+-> todo: 
+signinficant tests on RL comparison
+wilcoxon rank sum test
+
+
+rl correlation: 
+include: goal reached, GOD
+
