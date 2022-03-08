@@ -8,7 +8,7 @@ import torch
 import torch.nn as nn
 import numpy as np
 
-from carla.architectures.utils import get_model, cnn, mlp
+from carla.architectures.utils import get_model, cnn, mlp, invres
 from carla.architectures.contextualizer import get_contextualizer_model, MODELS_DICT
 from gym.spaces import Discrete
 from torch.distributions.categorical import Categorical
@@ -75,6 +75,16 @@ class StateContextNet(nn.Module):
             # estimate the output shape of state_net
             dummy_out = self.state_net(torch.rand(2, *obs_shape))
             self.state_encoding_shape = dummy_out.shape
+        elif self.h_sizes_state_net[0] == -1:
+            self.state_net = invres(obs_shape, self.h_bottleneck, output_activation=activation)
+            dummy_out = self.state_net(torch.rand(2, obs_shape[2], obs_shape[0], obs_shape[1]))
+            self.state_encoding_shape = dummy_out.shape
+            #torch.Size([2, 3, 48, 48])
+            #torch.Size([2, 128])
+            # print(bottleneck)
+            # print(torch.rand(2, obs_shape[2], obs_shape[0], obs_shape[1]).shape)
+            # print(self.state_encoding_shape)
+            # raise "end"
         else:
             self.state_net = cnn([3] + self.h_sizes_state_net, obs_shape, self.h_bottleneck, activation, kernel_size,
                                  stride, output_activation=activation, bottleneck=bottleneck)
@@ -82,6 +92,7 @@ class StateContextNet(nn.Module):
             # estimate the output shape of state_net
             dummy_out = self.state_net(torch.rand(2, obs_shape[2], obs_shape[0], obs_shape[1]))
             self.state_encoding_shape = dummy_out.shape
+            
 
         # setting up context net
         if contextual:
@@ -171,7 +182,6 @@ class StateContextNet(nn.Module):
             param.requires_grad = True
 
     def forward(self, obs):
-
         inp = obs['image'].permute(0, 3, 1, 2)
         state_features = self.state_net(inp)
 
