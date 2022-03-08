@@ -9,7 +9,7 @@ import torch.nn as nn
 import numpy as np
 
 from carla.agents.utils.weight_init import weights_init_he, weights_init_xavier, weights_init_kaiming_normal
-from carla.architectures.sebastian.InvRes import InvertedResidualVAEModel
+from carla.architectures.sebastian.InvRes import Encoder, InvertedResidualVAEModel
 from carla.architectures.vae import BasicBetaVAE
 
 
@@ -37,6 +37,21 @@ def cnn(sizes, obs_shape, out_hidden, activation, kernel_size, stride, output_ac
         feat_final_dim = np.prod(nn.Sequential(*layers)(torch.zeros(1, *obs_shape).permute(0, 3, 1, 2)).shape)
         layers += [nn.Flatten(), nn.Linear(feat_final_dim, out_hidden), output_activation()]
 
+    return nn.Sequential(*layers)
+
+# class Permute(nn.Module):
+#     def __init__(self, dims):
+#         super().__init__()
+#         self.dims = dims,  # extra comma
+
+#     def forward(self, x):
+#         return x.permute(*self.dims)
+
+def invres(obs_shape, out_hidden, output_activation=nn.Identity):
+   
+    layers = [ #Permute([0,3,1,2]), 
+        Encoder(out_hidden, obs_shape[-1], obs_shape[0]), output_activation()
+    ]
     return nn.Sequential(*layers)
 
 
