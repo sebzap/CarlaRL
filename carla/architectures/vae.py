@@ -103,11 +103,11 @@ class BasicBetaVAE(nn.Module):
         self.fc_mu = nn.Linear(np.prod(self.conv_feat_shape), latent_dim)
         self.fc_var = nn.Linear(np.prod(self.conv_feat_shape), latent_dim)
 
-        self.context_predictor = nn.Linear(latent_dim, n_context)
+        #self.context_predictor = nn.Linear(latent_dim, n_context)
 
         nn.init.kaiming_normal_(self.fc_mu.weight, mode='fan_out')
         nn.init.kaiming_normal_(self.fc_var.weight, mode='fan_out')
-        nn.init.kaiming_normal_(self.context_predictor.weight, mode='fan_out')
+        # nn.init.kaiming_normal_(self.context_predictor.weight, mode='fan_out')
 
         # Build Decoder
         decoder_modules = []
@@ -165,7 +165,7 @@ class BasicBetaVAE(nn.Module):
         self.decoder_input.apply(init_fn)
         self.decoder.apply(init_fn)
         self.final_layer.apply(init_fn)
-        self.context_predictor.apply(init_fn)
+        # self.context_predictor.apply(init_fn)
 
     def softclip(self, tensor, min):
         """ Clips the tensor values at the minimum value min in a softway. Taken from Handful of Trials """

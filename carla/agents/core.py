@@ -8,7 +8,7 @@ import torch
 import torch.nn as nn
 import numpy as np
 
-from carla.architectures.utils import get_model, cnn, mlp, invres
+from carla.architectures.utils import get_model, cnn, invres_nobn, mlp, invres
 from carla.architectures.contextualizer import get_contextualizer_model, MODELS_DICT
 from gym.spaces import Discrete
 from torch.distributions.categorical import Categorical
@@ -79,6 +79,10 @@ class StateContextNet(nn.Module):
             self.state_net = invres(obs_shape, self.h_bottleneck, output_activation=activation)
             dummy_out = self.state_net(torch.rand(2, obs_shape[2], obs_shape[0], obs_shape[1]))
             self.state_encoding_shape = dummy_out.shape
+        elif self.h_sizes_state_net[0] == -2:
+            self.state_net = invres_nobn(obs_shape, self.h_bottleneck, output_activation=activation)
+            dummy_out = self.state_net(torch.rand(2, obs_shape[2], obs_shape[0], obs_shape[1]))
+            self.state_encoding_shape = dummy_out.shape
             #torch.Size([2, 3, 48, 48])
             #torch.Size([2, 128])
             # print(bottleneck)
@@ -92,7 +96,6 @@ class StateContextNet(nn.Module):
             # estimate the output shape of state_net
             dummy_out = self.state_net(torch.rand(2, obs_shape[2], obs_shape[0], obs_shape[1]))
             self.state_encoding_shape = dummy_out.shape
-            
 
         # setting up context net
         if contextual:

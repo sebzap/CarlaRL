@@ -106,3 +106,19 @@ wilcoxon rank sum test
 rl correlation: 
 include: goal reached, GOD
 
+
+
+
+Results todos:
+architecture experiment
+visual examples
+format results-rl chapter
+
+conclusion todos
+
+- thoughts on hp scaling
+- annealed leaky (-> don't use ReLU (with initial high KL reg) -> use leaky (do i need data here?) (can mention))
+
+questions 
+-> hamid: mean is fine (ref paper?)
+-> default values for VAE architecture?

@@ -47,10 +47,19 @@ def cnn(sizes, obs_shape, out_hidden, activation, kernel_size, stride, output_ac
 #     def forward(self, x):
 #         return x.permute(*self.dims)
 
+
 def invres(obs_shape, out_hidden, output_activation=nn.Identity):
-   
-    layers = [ #Permute([0,3,1,2]), 
+
+    layers = [  # Permute([0,3,1,2]),
         Encoder(out_hidden, obs_shape[-1], obs_shape[0]), output_activation()
+    ]
+    return nn.Sequential(*layers)
+
+
+def invres_nobn(obs_shape, out_hidden, output_activation=nn.Identity):
+
+    layers = [  # Permute([0,3,1,2]),
+        Encoder(out_hidden, obs_shape[-1], obs_shape[0], norm_layer=nn.Identity), output_activation()
     ]
     return nn.Sequential(*layers)
 
@@ -94,7 +103,7 @@ def get_model(kernel_sizes, output_padding_lst, latent_dim, hidden_dims, img_siz
     d = {}
     for module in model.named_modules():
         n = module[1].__class__.__name__
-        print(n)
+        print(n, count_parameters(module[1]))
         if not(n in d):
             d[n] = 0
 
